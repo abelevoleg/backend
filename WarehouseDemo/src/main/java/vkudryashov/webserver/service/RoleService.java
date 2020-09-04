@@ -1,6 +1,7 @@
 package vkudryashov.webserver.service;
 
 import vkudryashov.webserver.model.Role;
+import java.util.List;
 
 /**
  * Service interface for {@link Role}
@@ -11,4 +12,5 @@ import vkudryashov.webserver.model.Role;
 public interface RoleService {
     void save(Role role);
     Role findByName(String name);
+    List<Role> findAll();
 }

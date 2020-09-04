@@ -1,6 +1,6 @@
 package vkudryashov.webserver.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.Set;
 
@@ -11,24 +11,27 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @Transient
+    @JsonIgnore
     private String confirmPassword;
-
-    @Column(name = "fullname")
     private String fullname;
+    private String email;
+    private String phone;
 
     @ManyToMany
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
+
+    @Transient
+    @JsonIgnore
+    private String[] roleNames;
 
     public Long getId() {
         return id;
@@ -70,6 +73,22 @@ public class User {
         this.fullname = fullname;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -78,4 +97,11 @@ public class User {
         this.roles = roles;
     }
 
+    public void setRoleNames(String[] roleNames) {
+        this.roleNames = roleNames;
+    }
+
+    public String[] getRoleNames() {
+        return roleNames;
+    }
 }

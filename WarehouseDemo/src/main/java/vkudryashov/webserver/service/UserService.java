@@ -1,7 +1,6 @@
 package vkudryashov.webserver.service;
 
 import vkudryashov.webserver.model.User;
-
 import java.util.List;
 
 /**
@@ -15,5 +14,6 @@ public interface UserService {
     void save(User user);
     void delete(User user);
     User findByUsername(String username);
-    List<User> getAllUsers();
+    List<User> findAll();
+    void setRoles(User user);
 }

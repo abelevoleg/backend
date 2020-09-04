@@ -4,6 +4,7 @@ import vkudryashov.webserver.dao.RoleDao;
 import vkudryashov.webserver.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService{
@@ -18,5 +19,10 @@ public class RoleServiceImpl implements RoleService{
     @Override
     public Role findByName(String name) {
         return roleDao.findByName(name);
+    }
+
+    @Override
+    public List<Role> findAll() {
+        return roleDao.findAll();
     }
 }

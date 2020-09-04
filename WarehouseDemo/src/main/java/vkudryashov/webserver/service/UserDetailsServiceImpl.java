@@ -1,6 +1,5 @@
 package vkudryashov.webserver.service;
 
-import vkudryashov.webserver.dao.UserDao;
 import vkudryashov.webserver.model.Role;
 import vkudryashov.webserver.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,12 +23,12 @@ import java.util.Set;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
+        User user = userService.findByUsername(username);
         if (user == null) throw new UsernameNotFoundException("Login or password are incorrect");
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         for (Role role :user.getRoles()) {

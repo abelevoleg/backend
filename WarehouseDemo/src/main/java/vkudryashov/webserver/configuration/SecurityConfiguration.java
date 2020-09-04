@@ -2,6 +2,7 @@ package vkudryashov.webserver.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,23 +24,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/admin","/home").authenticated()
+                .antMatchers(HttpMethod.DELETE,"/rest/**").denyAll()
+                .antMatchers(HttpMethod.DELETE,"/rest/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login");
+                .httpBasic();
     }
-/*    @Bean
-    public AuthenticationManager authenticationManager(){
-        return new AuthenticationManager() {
-            @Override
-            public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-                System.out.println("authentication: ");
-                System.out.println(authentication);
-
-                if (authentication.isAuthenticated()) return authentication;
-                return null;
-            }
-        };
-    }*/
 }

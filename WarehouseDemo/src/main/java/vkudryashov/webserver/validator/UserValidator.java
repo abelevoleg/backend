@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Validator for {@link User} class.
@@ -18,6 +20,8 @@ import org.springframework.validation.Validator;
 
 @Component
 public class UserValidator implements Validator {
+    private Set<String> skip = new HashSet<>();
+
     @Autowired
     private UserService userService;
 
@@ -29,19 +33,32 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
         User user = (User) o;
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username","Required");
-        if (user.getUsername().length() < 4 || user.getUsername().length()>32){
-            errors.rejectValue("username","Size.userForm.username");
+        if (!skip.contains("username")) {
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "Required");
+            if (user.getUsername().length() < 4 || user.getUsername().length() > 32) {
+                errors.rejectValue("username", "Size.userForm.username");
+            }
+            if (userService.findByUsername(user.getUsername()) != null) {
+                errors.rejectValue("username", "Dublicate.userForm.username");
+            }
         }
-        if (userService.findByUsername(user.getUsername()) != null){
-            errors.rejectValue("username","Dublicate.userForm.username");
+        if (!skip.contains("password")) {
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "Required");
+            if (user.getPassword().length() < 8 || user.getPassword().length() > 32) {
+                errors.rejectValue("password", "Size.userForm.password");
+            }
+            if (!user.getConfirmPassword().equals(user.getPassword())) {
+                errors.rejectValue("confirmPassword", "Different.userForm.password");
+            }
         }
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"password","Required");
-        if (user.getPassword().length() < 8 || user.getPassword().length() > 32){
-            errors.rejectValue("username","Size.userForm.password");
+        if (user.getRoleNames() == null){
+            user.setRoles(new HashSet<>());
+            errors.rejectValue("roleNames", "SelectNone.userForm.roleNames");
         }
-        if (!user.getConfirmPassword().equals(user.getPassword())){
-            errors.rejectValue("confirmPassword","Different.userForm.password");
-        }
+        skip.clear();
+    }
+
+    public void setSkip(Set<String> skip) {
+        this.skip = skip;
     }
 }
