@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev
+  messages:
+    basename: validation
+server:
+  port: 8189
+jwt:
+  secret: SXQnc015U2VjcmV0S2V5MWQ5OFQ3Y2lqaGFzODd5am5iY2l1eTdTM2RhOXs4eWNramhrajM3a2poRmRpOHlxamtoamtraixtamxranpDZGY7ams7al5sa2pmamtnYmV3dWloa2pubCQ7ZmlvaHdlaWhq
